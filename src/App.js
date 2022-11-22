@@ -17,6 +17,9 @@ function App() {
         >
           Learn React
         </a>
+        <p>
+          Hello from first commit!)
+        </p>
       </header>
     </div>
   );
