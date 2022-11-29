@@ -7,7 +7,7 @@ import Column from 'react-bootstrap/Col';
 
 export default function Description() {
     return (
-        <Container className={"Description mb-4"}>
+        <Container className={"Description mb-4 px-4"}>
 
             <h1>Прогнозирование размеров сварного шва при электронно-лучевой сварке тонкостенных конструкций
                 аэрокосмического
