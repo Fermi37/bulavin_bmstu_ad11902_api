@@ -3,10 +3,10 @@ from flask import Flask, Response, jsonify, request
 app = Flask(__name__)
 
 
-@app.route('/model', methods=['GET'])
+@app.route('/model', methods=['POST'])
 def post():
     data = request
-    # print(data.form['formIW'])
+    print(data)
     return jsonify({'message': 'success'})
 
 
