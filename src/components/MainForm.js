@@ -1,34 +1,51 @@
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import React, {useRef} from 'react';
+import React, {useRef, useState} from 'react';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Column from 'react-bootstrap/Col';
 import {useQuery} from "@tanstack/react-query";
-import { useForm } from "react-hook-form";
+import {useForm} from "react-hook-form";
 import axios from "axios";
 
 const BASE_API_URL = process.env.REACT_APP_API_URL;
 
 
-const useModel = (modelFeatures) => {
-    const postModelFeatures = async () => {
-        await new Promise(resolve => setTimeout(resolve, 500));
-        const modelUrl = BASE_API_URL
-        const {data} = await axios.post(modelUrl, modelFeatures);
-        return data;
-    }
-
-    return useQuery(Object.values(modelFeatures), {});
-}
+// const useModel = (modelFeatures) => {
+//     const postModelFeatures = async () => {
+//         await new Promise(resolve => setTimeout(resolve, 500));
+//         const modelUrl = BASE_API_URL
+//         const {data} = await axios.post(modelUrl, modelFeatures);
+//         return data;
+//     }
+//
+//     return useQuery(Object.values(modelFeatures), {});
+// }
 
 export default function MainForm() {
-    const { register, handleSubmit, watch, errors } = useForm();
+    const [width, setWidth] = useState(-1);
+    const [depth, setDepth] = useState(-1);
+    const {register, handleSubmit} = useForm({
+        defaultValues: {
+            iw: 47,
+            iff: 139,
+            vw:5,
+            fp:80,
+        }
+    });
 
-     // const {isLoading, error, data, isFetching} = useModel("general");
+    // const {isLoading, error, data, isFetching} = useModel("general");
 
     const onSubmit = (data) => {
-        // event.preventDefault();
+        axios.post(BASE_API_URL + '/model', data, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(r => {
+            console.log(r.data);
+            setWidth(r.data.width);
+            setDepth(r.data.depth);
+        });
         console.log(data);
 
     }
@@ -41,7 +58,7 @@ export default function MainForm() {
             </Container>
             <Container className={'my-4'}>
                 <h4>Результат прогнозирования</h4>
-                <h4>Width: Depth:</h4>
+                <h4 className={"bg-light"}>Width: {width > 0 ? width.toFixed(2) : ""} Depth: {depth > 0 ? depth.toFixed(2) : ""}</h4>
             </Container>
             <Form onSubmit={handleSubmit(onSubmit)}>
                 <Container>
@@ -53,16 +70,10 @@ export default function MainForm() {
                                     required: true,
                                     min: 43,
                                     max: 49,
-
-                                    // pattern: {
-                                    //     // float number
-                                    //     value: /^\d+(\.\d+)?$/,
-                                    // }
                                 })}
-                                     // aria-invalid={errors.iw ? "true" : "false"}
                                 />
                                 <Form.Text className="text-muted">
-                                    Введите сварочный ток, разделителем дробной части является точка.
+                                    {/*Введите сварочный ток, разделителем дробной части является точка.*/}
                                 </Form.Text>
                             </Form.Group>
                         </Column>
@@ -71,19 +82,19 @@ export default function MainForm() {
                             <Form.Group className="mb-3" controlId="formIF">
                                 <Form.Label>Ток фокусировки электронного пучка, IF</Form.Label>
                                 <Form.Control type="number" placeholder="IF 131...150" step='0.01' {
-                                    ...register('if', {
+                                    ...register('iff', {
                                         required: true,
                                         min: 131,
                                         max: 150,
                                     })
                                 }/>
                                 <Form.Text className="text-muted">
-                                    Введите ток фокусировки, разделителем дробной части является точка.
+                                    {/*Введите ток фокусировки, разделителем дробной части является точка.*/}
                                 </Form.Text>
                             </Form.Group>
                         </Column>
                     </Row>
-                    <Row>
+                    <Row className={''}>
                         <Column className={'col-lg-6 col-sm-12'}>
                             <Form.Group className="mb-3" controlId="formWV">
                                 <Form.Label>Скорость сварки, VW</Form.Label>
@@ -95,12 +106,12 @@ export default function MainForm() {
                                     })
                                 }/>
                                 <Form.Text className="text-muted">
-                                    Введите скорость сварки, разделителем дробной части является точка.
+                                    {/*Введите скорость сварки, разделителем дробной части является точка.*/}
                                 </Form.Text>
                             </Form.Group>
 
                         </Column>
-                        <Column className={'col-lg-6 col-sm-12'}>
+                        <Column className={'col-lg-6 col-sm-12 mb-4'}>
                             <Form.Group className="mb-3" controlId="formFP">
                                 <Form.Label>Расстояние от поверхности образцов, FP</Form.Label>
                                 <Form.Control type="number" placeholder="FP 50...125" step='0.01' {
@@ -111,12 +122,12 @@ export default function MainForm() {
                                     })
                                 }/>
                                 <Form.Text className="text-muted">
-                                    Введите расстояние от поверхностей, разделителем дробной части является точка.
+                                    {/*Введите расстояние от поверхностей, разделителем дробной части является точка.*/}
                                 </Form.Text>
                             </Form.Group>
                         </Column>
                     </Row>
-                    <Button variant="primary" type="submit">
+                    <Button variant="primary" type="submit" className={'mb-4'}>
                         Submit
                     </Button>
                 </Container>
