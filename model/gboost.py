@@ -11,8 +11,8 @@ def _load(model_path):
     return model
 
 
-_width_path = join(dir, '..', 'data', 'gboost_width.pkl')
-_depth_path = join(dir, '..', 'data', 'gboost_depth.pkl')
+_width_path = join(dir, 'gboost_width.pkl')
+_depth_path = join(dir, 'gboost_depth.pkl')
 _width_model = _load(_width_path)
 _depth_model = _load(_depth_path)
 
