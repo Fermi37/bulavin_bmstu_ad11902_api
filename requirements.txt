@@ -25,3 +25,5 @@ threadpoolctl
 tomli
 Werkzeug
 zipp
+gunicorn
+
